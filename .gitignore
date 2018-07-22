@@ -1,2 +1,4 @@
 kubernetes
+docker
 *.balx
+*.log

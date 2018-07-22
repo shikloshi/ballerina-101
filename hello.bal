@@ -4,43 +4,71 @@ import ballerina/time;
 import ballerinax/kubernetes;
 import ballerinax/docker;
 
-
-type Person object {
-    string firstName;
-    string lastName;
+// Change this object
+type Data object {
+    string message;
 };
-@kubernetes:Ingress {
-    endpointName: "simple",
-    targetPath: "/" 
-}  
+
+// @docker:Config {
+//     registry: "gcr.io/optimistic-yew-208712",
+//     name: "hello-ballerina",
+//     tag: "0.0.1"
+// }
+
+// @kubernetes:Ingress {
+//     endpointName: "hello-service",
+//     targetPath: "/" 
+// }  
 
 @kubernetes:Service {
     name: "hello-service",
-    serviceType: "LoadBalancer"
+    serviceType: "NodePort"
 }
 @http:ServiceConfig {
     basePath: "/"
 }
+
 @kubernetes:Deployment {
+    // TODO: move this to configuration file for k8s
     replicas: 2,
     name: "hello-deployment",
     image: "gcr.io/optimistic-yew-208712/hello-ballerina:0.0.1"
+    // TODO: find out how can push to gcr.io (authz issues)
+    // buildImage: true,
+    // push: true
 }
+
 service<http:Service> hello bind { port: 9090 } {
 
     @http:ResourceConfig {
         methods: ["POST"],
-        path: "/",
+        path: "/created",
         consumes: ["application/json"],
         produces: ["application/json"],
-        body: "person"
+        body: "data"
     }
-    hi (endpoint caller, http:Request request, Person person) {
+    echo (endpoint caller, http:Request request, Data data) {
         var now = time:nanoTime();
-        var name = person.firstName;
         http:Response response = new;
         json js = {
-            createdAt: now
+            createdAt: now,
+            method: "POST"
+        };
+        response.setPayload(js);
+        _ = caller ->respond(response);
+    }
+
+    @http:ResourceConfig {
+        methods: ["GET"],
+        path: "/hey",
+        produces: ["application/json"]
+    }
+    hi (endpoint caller, http:Request request) {
+        var now = time:nanoTime();
+        http:Response response = new;
+        json js = {
+            createdAt: now,
+            method: "GET"
         };
         response.setPayload(js);
         _ = caller ->respond(response);

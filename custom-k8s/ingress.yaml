@@ -1,0 +1,8 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-ballerina-ing
+spec:
+    backend:
+      serviceName: "hello-service"
+      servicePort: 9090
