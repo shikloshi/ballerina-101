@@ -18,7 +18,7 @@ $ ballerina run hello.bal
 
 Deploy to Kubernetes
 ---- 
-After `build` step and assuming you have a working cluster `kubectl` access credentials.
+After `build` step and assuming you have a working cluster and `kubectl` access credentials.
 
 ```bash
 $ kubectl -f create ./kubernetes
