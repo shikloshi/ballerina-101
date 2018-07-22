@@ -12,18 +12,13 @@ type Data object {
 
 
 @docker:Config {
-    registry: "gcr.io/optimistic-yew-208712",
+    registry: "$env{DOCKER_REGISTRY}",
     name: "hello-ballerina",
-    tag: "0.0.2",
+    tag: "$env{DOCKER_IMAGE_TAG}",
     push: true,
     username: "$env{DOCKER_USERNAME}",
     password: "$env{DOCKER_PASSWORD}"
 }
-
-// @kubernetes:Ingress {
-//     endpointName: "hello-service",
-//     targetPath: "/" 
-// }  
 
 @kubernetes:Service {
     name: "hello-service",
@@ -37,8 +32,8 @@ type Data object {
     // TODO: move this to configuration file for k8s
     replicas: 2,
     name: "hello-deployment",
-    image: "gcr.io/optimistic-yew-208712/hello-ballerina:0.0.2",
-    imagePullPolicy: "always"
+    image: "gcr.io/optimistic-yew-208712/hello-ballerina:$env{DOCKER_IMAGE_TAG}"
+    // imagePullPolicy: "always"
     // buildImage: true,
     // push: true
     // TODO: find out how can push to gcr.io (authz issues)
