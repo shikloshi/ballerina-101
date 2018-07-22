@@ -24,23 +24,17 @@ type Data object {
     name: "hello-service",
     serviceType: "NodePort"
 }
-@http:ServiceConfig {
-    basePath: "/"
-}
 
 @kubernetes:Deployment {
     // TODO: move this to configuration file for k8s
     replicas: 2,
     name: "hello-deployment",
     image: "gcr.io/optimistic-yew-208712/hello-ballerina:$env{DOCKER_IMAGE_TAG}"
-    // imagePullPolicy: "always"
-    // buildImage: true,
-    // push: true
-    // TODO: find out how can push to gcr.io (authz issues)
-    // buildImage: true,
-    // push: true
 }
 
+@http:ServiceConfig {
+    basePath: "/"
+}
 service<http:Service> hello bind { port: 9090 } {
 
     // for k8s ingress to work
