@@ -9,11 +9,11 @@ type Data object {
     string message;
 };
 
-// @docker:Config {
-//     registry: "gcr.io/optimistic-yew-208712",
-//     name: "hello-ballerina",
-//     tag: "0.0.1"
-// }
+@docker:Config {
+    registry: "gcr.io/optimistic-yew-208712",
+    name: "hello-ballerina",
+    tag: "0.0.2 "
+}
 
 // @kubernetes:Ingress {
 //     endpointName: "hello-service",
@@ -32,13 +32,23 @@ type Data object {
     // TODO: move this to configuration file for k8s
     replicas: 2,
     name: "hello-deployment",
-    image: "gcr.io/optimistic-yew-208712/hello-ballerina:0.0.1"
+    image: "gcr.io/optimistic-yew-208712/hello-ballerina:0.0.2",
     // TODO: find out how can push to gcr.io (authz issues)
     // buildImage: true,
     // push: true
 }
 
 service<http:Service> hello bind { port: 9090 } {
+
+    // for k8s ingress to work
+    @http:ResourceConfig {
+        path: "/"
+    }
+    health (endpoint caller, http:Request request) {
+        http:Response res = new;
+        res.statusCode = 200;
+        _ = caller -> respond(res);
+    }
 
     @http:ResourceConfig {
         methods: ["POST"],
