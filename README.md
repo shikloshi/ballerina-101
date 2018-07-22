@@ -24,4 +24,4 @@ After `build` step and assuming you have a working cluster and `kubectl` access 
 $ kubectl -f create ./kubernetes
 ```
 
-> For now I could not make `@kubernetes:Ingress` to work properly (getting exception at compilation time) so I've addes the `custom-k8s/ingress.yaml` file for basic ingress (assuming Ingress controller already implemented or integreated to your cluster).
+> For now I could not make `@kubernetes:Ingress` to work properly (getting exception at compilation time) so I've added the `custom-k8s/ingress.yaml` file for basic ingress (assuming Ingress controller already implemented or integreated to your cluster).
