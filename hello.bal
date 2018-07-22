@@ -15,6 +15,7 @@ type Data object {
     registry: "gcr.io/optimistic-yew-208712",
     name: "hello-ballerina",
     tag: "0.0.2",
+    push: true,
     username: "$env{DOCKER_USERNAME}",
     password: "$env{DOCKER_PASSWORD}"
 }
