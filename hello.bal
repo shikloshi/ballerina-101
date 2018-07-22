@@ -1,5 +1,6 @@
 import ballerina/http;
 import ballerina/time;
+import ballerina/config;
 
 import ballerinax/kubernetes;
 import ballerinax/docker;
@@ -9,10 +10,13 @@ type Data object {
     string message;
 };
 
+
 @docker:Config {
     registry: "gcr.io/optimistic-yew-208712",
     name: "hello-ballerina",
-    tag: "0.0.2 "
+    tag: "0.0.2",
+    username: "$env{DOCKER_USERNAME}",
+    password: "$env{DOCKER_PASSWORD}"
 }
 
 // @kubernetes:Ingress {
@@ -33,6 +37,9 @@ type Data object {
     replicas: 2,
     name: "hello-deployment",
     image: "gcr.io/optimistic-yew-208712/hello-ballerina:0.0.2",
+    imagePullPolicy: "always"
+    // buildImage: true,
+    // push: true
     // TODO: find out how can push to gcr.io (authz issues)
     // buildImage: true,
     // push: true
