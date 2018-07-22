@@ -10,7 +10,6 @@ type Data object {
     string message;
 };
 
-
 @docker:Config {
     registry: "$env{DOCKER_REGISTRY}",
     name: "hello-ballerina",
@@ -21,6 +20,7 @@ type Data object {
 }
 
 @kubernetes:Service {
+    // TODO: move this to configuration file for k8s
     name: "hello-service",
     serviceType: "NodePort"
 }
@@ -29,7 +29,7 @@ type Data object {
     // TODO: move this to configuration file for k8s
     replicas: 2,
     name: "hello-deployment",
-    image: "gcr.io/optimistic-yew-208712/hello-ballerina:$env{DOCKER_IMAGE_TAG}"
+    image: "$env{DOCKER_REGISTRY}/hello-ballerina:$env{DOCKER_IMAGE_TAG}"
 }
 
 @http:ServiceConfig {
@@ -52,7 +52,7 @@ service<http:Service> hello bind { port: 9090 } {
         path: "/created",
         consumes: ["application/json"],
         produces: ["application/json"],
-        body: "data"
+        body: "data"    
     }
     echo (endpoint caller, http:Request request, Data data) {
         var now = time:nanoTime();
